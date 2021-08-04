@@ -6,52 +6,49 @@
 
 int main(int, char**)
 {
-	if (SDL_Init(SDL_INIT_VIDEO != 0))
-	{
-		std::cout << "SDL_Init Error" << SDL_GetError() << std::endl;
-		return 1;
-	}
+	dwb::Engine engine;
+	engine.StartUp();
 
-	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
-
-	SDL_Window* window = SDL_CreateWindow("GAT150", 100, 100, 800, 600, SDL_WINDOW_SHOWN); 
-	if (window == nullptr) 
-	{
-		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl; 
-		SDL_Quit(); 
-		return 1; 
-	}
-	
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+	engine.Get<dwb::Renderer>()->Create("GAT150", 800, 600);
 
 	std::cout << dwb::GetFilePath() << std::endl;
 	dwb::SetFilePath("../Resources");
 	std::cout << dwb::GetFilePath() << std::endl;
 
-	//CODE GO HERE
-	SDL_Surface* surface = IMG_Load("sf2.png");
+	std::shared_ptr<dwb::Texture> texture = engine.Get<dwb::ResourceSystem>()->Get<dwb::Texture>("sf2.png", engine.Get<dwb::Renderer>());
 
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
+	//CODE GO HERE
+
 
 	bool quit = false;
 	SDL_Event event;
 
 	while (!quit)
 	{
-		SDL_WaitEvent(&event);
+		SDL_PollEvent(&event);
 		switch (event.type)
 		{
 		case SDL_QUIT:
 			quit = true;
 			break;
 		}
-		SDL_RenderCopy(renderer, texture, NULL, NULL);
-		SDL_RenderPresent(renderer);
+
+		engine.Get<dwb::Renderer>()->BeginFrame();
+
+		dwb::Vector2 pos{ 300,400 };
+		engine.Get<dwb::Renderer>()->Draw(texture, pos);
+
+		engine.Get<dwb::Renderer>()->EndFrame();
+
+		//for (int i = 0; i < 50; i++) 
+		//{
+		//	SDL_Rect src{ 32,64, 32,64 };
+
+		//	SDL_Rect dest{ dwb::RandomRangeInt(0,screen.x), dwb::RandomRangeInt(0,screen.y), 64,96 };
+		//	SDL_RenderCopy(renderer, texture, &src, &dest);
+		//}
 	}
 
-
-	IMG_Quit();
 	SDL_Quit();
 	return 0;
 }

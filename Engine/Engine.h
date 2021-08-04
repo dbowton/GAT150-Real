@@ -3,6 +3,11 @@
 //Audio
 //#include "Audio/AudioSystem.h"
 
+
+//Graphics
+#include "Graphics/Renderer.h"
+#include "Graphics/Texture.h"
+
 //core
 #include "Core/FileSystem.h"
 
