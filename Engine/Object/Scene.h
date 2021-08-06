@@ -8,12 +8,13 @@ namespace dwb
 {
 	class Actor;
 	class Engine;
+	class Renderer;
 
 	class Scene : public Object
 	{
 	public:
 		void Update(float dt);
-		void Draw();
+		void Draw(Renderer* renderer);
 
 		void addActor(std::unique_ptr<Actor> actor);
 		void removeActor(Actor* actor);

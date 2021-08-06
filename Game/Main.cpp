@@ -8,17 +8,22 @@ int main(int, char**)
 {
 	dwb::Engine engine;
 	engine.StartUp();
-
 	engine.Get<dwb::Renderer>()->Create("GAT150", 800, 600);
 
-	std::cout << dwb::GetFilePath() << std::endl;
+	dwb::Scene scene;
+	scene.engine = &engine;
+
 	dwb::SetFilePath("../Resources");
-	std::cout << dwb::GetFilePath() << std::endl;
 
 	std::shared_ptr<dwb::Texture> texture = engine.Get<dwb::ResourceSystem>()->Get<dwb::Texture>("sf2.png", engine.Get<dwb::Renderer>());
 
-	//CODE GO HERE
+	for (int i = 0; i < 10; i++)
+	{
+		dwb::Transform transform{ {dwb::RandomRangeInt(0, 800), dwb::RandomRangeInt(0, 600)}, dwb::RandomRange(0.0f, 360.0f), 1.0f };
+		std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(transform, texture);
 
+		scene.addActor(std::move(actor));
+	}
 
 	bool quit = false;
 	SDL_Event event;
@@ -33,10 +38,15 @@ int main(int, char**)
 			break;
 		}
 
+		engine.Update(0);
+		quit = (engine.Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_ESCAPE) == dwb::InputSystem::eKeyState::Pressed);
+		scene.Update(0);
+
 		engine.Get<dwb::Renderer>()->BeginFrame();
 
-		dwb::Vector2 pos{ 300,400 };
-		engine.Get<dwb::Renderer>()->Draw(texture, pos);
+		scene.Draw(engine.Get<dwb::Renderer>());
+		//dwb::Vector2 pos{ 300,400 };
+		//engine.Get<dwb::Renderer>()->Draw(texture, pos, 0.0f, dwb::Vector2{ 1, 1 });
 
 		engine.Get<dwb::Renderer>()->EndFrame();
 

@@ -18,6 +18,7 @@
 
 //Systems
 #include "Framework/EventSystem.h"
+#include "Input/InputSystem.h"
 
 //Resource
 #include "Resource/ResourceSystem.h"
