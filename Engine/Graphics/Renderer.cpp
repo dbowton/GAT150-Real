@@ -36,7 +36,7 @@ namespace dwb
 			SDL_Quit();
 		}
 
-		renderer = SDL_CreateRenderer(window, -1, 0);
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	}
 
 	void Renderer::BeginFrame()

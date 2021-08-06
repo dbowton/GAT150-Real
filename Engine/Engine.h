@@ -10,6 +10,7 @@
 
 //core
 #include "Core/FileSystem.h"
+#include "Core/Timer.h"
 
 //Base
 #include "Object/Actor.h"
@@ -44,11 +45,14 @@ namespace dwb
 		void StartUp();
 		void ShutDown();
 
-		void Update(float dt);
+		void Update();
 		void Draw();
 
 		template<typename T>
 		T* Get();
+
+	public:
+		FrameTimer time;
 
 	private:
 		std::vector<std::unique_ptr<System>> systems;

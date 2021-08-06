@@ -6,9 +6,13 @@
 
 int main(int, char**)
 {
+	dwb::Timer timer;
+
 	dwb::Engine engine;
 	engine.StartUp();
 	engine.Get<dwb::Renderer>()->Create("GAT150", 800, 600);
+
+	std::cout << timer.ElapsedTicks() << std::endl;
 
 	dwb::Scene scene;
 	scene.engine = &engine;
@@ -27,6 +31,7 @@ int main(int, char**)
 
 	bool quit = false;
 	SDL_Event event;
+	float quitTime = engine.time.time + 3.0f;
 
 	while (!quit)
 	{
@@ -38,15 +43,16 @@ int main(int, char**)
 			break;
 		}
 
-		engine.Update(0);
+		engine.Update();
 		quit = (engine.Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_ESCAPE) == dwb::InputSystem::eKeyState::Pressed);
-		scene.Update(0);
+		scene.Update(engine.time.deltaTime);
+
+		if (engine.time.time >= quitTime) quit = true;
+		engine.time.timeScale = 1;
 
 		engine.Get<dwb::Renderer>()->BeginFrame();
 
 		scene.Draw(engine.Get<dwb::Renderer>());
-		//dwb::Vector2 pos{ 300,400 };
-		//engine.Get<dwb::Renderer>()->Draw(texture, pos, 0.0f, dwb::Vector2{ 1, 1 });
 
 		engine.Get<dwb::Renderer>()->EndFrame();
 

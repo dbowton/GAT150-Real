@@ -15,9 +15,10 @@ namespace dwb
 	{
 		std::for_each(systems.begin(), systems.end(), [](auto& system) {system->ShutDown(); });
 	}
-	void Engine::Update(float dt)
+	void Engine::Update()
 	{
-		std::for_each(systems.begin(), systems.end(), [dt](auto& system) {system->Update(dt); });
+		time.Tick();
+		std::for_each(systems.begin(), systems.end(), [this](auto& system) {system->Update(this->time.deltaTime); });
 	}
 
 	void Engine::Draw()
