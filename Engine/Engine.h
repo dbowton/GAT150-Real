@@ -7,6 +7,7 @@
 //Graphics
 #include "Graphics/Renderer.h"
 #include "Graphics/Texture.h"
+#include "Graphics/ParticleSystem.h"
 
 //core
 #include "Core/FileSystem.h"
@@ -46,7 +47,7 @@ namespace dwb
 		void ShutDown();
 
 		void Update();
-		void Draw();
+		void Draw(Renderer* renderer);
 
 		template<typename T>
 		T* Get();

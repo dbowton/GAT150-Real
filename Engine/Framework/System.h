@@ -10,9 +10,11 @@ namespace dwb
 		virtual void Update(float dt) = 0;
 	};
 
+	class Renderer;
+
 	class GraphicsSystem : public System
 	{
 	public:
-		virtual void Draw() = 0;
+		virtual void Draw(Renderer* renderer) = 0;
 	};
 }

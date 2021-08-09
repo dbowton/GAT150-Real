@@ -44,8 +44,19 @@ int main(int, char**)
 		}
 
 		engine.Update();
-		quit = (engine.Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_ESCAPE) == dwb::InputSystem::eKeyState::Pressed);
 		scene.Update(engine.time.deltaTime);
+
+		if (engine.Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_ESCAPE) == dwb::InputSystem::eKeyState::Pressed)
+		{
+			quit = true;
+		}
+
+		if (engine.Get<dwb::InputSystem>()->GetButtonState((int) dwb::InputSystem::eMouseButton::Left) == dwb::InputSystem::eKeyState::Pressed)
+		{
+			dwb::Vector2 position = engine.Get<dwb::InputSystem>()->GetMousePosition();
+			std::cout << position.x << " " << position.y << std::endl;
+		}
+
 
 		if (engine.time.time >= quitTime) quit = true;
 		engine.time.timeScale = 1;
@@ -53,6 +64,7 @@ int main(int, char**)
 		engine.Get<dwb::Renderer>()->BeginFrame();
 
 		scene.Draw(engine.Get<dwb::Renderer>());
+		engine.Draw(engine.Get<dwb::Renderer>());
 
 		engine.Get<dwb::Renderer>()->EndFrame();
 
