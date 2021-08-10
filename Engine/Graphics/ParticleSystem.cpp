@@ -34,7 +34,7 @@ namespace dwb
 		{
 			if (particle.isActive) 
 			{
-						
+				//renderer->Draw(particle.texture, particle.position);
 			}
 		}
 	}

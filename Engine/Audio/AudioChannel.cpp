@@ -24,7 +24,7 @@ namespace dwb
 	float AudioChannel::GetPitch()
 	{
 		float pitch = 0;
-		if (IsPlaying)
+		if (IsPlaying())
 		{
 			channel->getPitch(&pitch);
 		}
@@ -42,7 +42,7 @@ namespace dwb
 	float AudioChannel::GetVolume()
 	{
 		float volume = 0;
-		if (IsPlaying)
+		if (IsPlaying())
 		{
 			channel->getPitch(&volume);
 		}
