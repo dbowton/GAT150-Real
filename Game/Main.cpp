@@ -19,6 +19,12 @@ int main(int, char**)
 
 	dwb::SetFilePath("../Resources");
 
+	engine.Get<dwb::AudioSystem>()->AddAudio("explosion", "Audio/Enemy_Killed.wav");
+
+
+	engine.Get<dwb::AudioSystem>()->AddAudio("song", "Audio/song.mp3");
+	dwb::AudioChannel channel = engine.Get<dwb::AudioSystem>()->PlayAudio("song", 1, 1, true);
+
 	std::shared_ptr<dwb::Texture> texture = engine.Get<dwb::ResourceSystem>()->Get<dwb::Texture>("sf2.png", engine.Get<dwb::Renderer>());
 
 	for (int i = 0; i < 10; i++)
@@ -31,7 +37,7 @@ int main(int, char**)
 
 	bool quit = false;
 	SDL_Event event;
-	float quitTime = engine.time.time + 3.0f;
+	float quitTime = engine.time.time + 100.0f;
 
 	while (!quit)
 	{
@@ -53,7 +59,10 @@ int main(int, char**)
 
 		if (engine.Get<dwb::InputSystem>()->GetButtonState((int) dwb::InputSystem::eMouseButton::Left) == dwb::InputSystem::eKeyState::Pressed)
 		{
+			channel.SetPitch(dwb::RandomRange(0.2f, 2.0f));
+			engine.Get<dwb::AudioSystem>()->PlayAudio("explosion", 1, dwb::RandomRange(0.2f, 2.0f));
 			dwb::Vector2 position = engine.Get<dwb::InputSystem>()->GetMousePosition();
+			//engine.Get<dwb::ParticleSystem>()->Create(position, 20, 3, engine.Get<dwb::ResourceSystem>())
 			std::cout << position.x << " " << position.y << std::endl;
 		}
 
