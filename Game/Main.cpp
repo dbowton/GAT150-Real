@@ -1,45 +1,14 @@
-#include "Engine.h"
-
-#include <SDL.h>
-#include <SDL_Image.h>
-#include <iostream>
+#include "Game.h"
 
 int main(int, char**)
 {
-	dwb::Timer timer;
-
-	dwb::Engine engine;
-	engine.StartUp();
-	engine.Get<dwb::Renderer>()->Create("GAT150", 800, 600);
-
-	std::cout << timer.ElapsedTicks() << std::endl;
-
-	dwb::Scene scene;
-	scene.engine = &engine;
-
-	dwb::SetFilePath("../Resources");
-
-	engine.Get<dwb::AudioSystem>()->AddAudio("explosion", "Audio/Enemy_Killed.wav");
-
-
-	engine.Get<dwb::AudioSystem>()->AddAudio("song", "Audio/song.mp3");
-	dwb::AudioChannel channel = engine.Get<dwb::AudioSystem>()->PlayAudio("song", 1, 1, true);
-
-	std::shared_ptr<dwb::Texture> texture = engine.Get<dwb::ResourceSystem>()->Get<dwb::Texture>("sf2.png", engine.Get<dwb::Renderer>());
-
-	for (int i = 0; i < 10; i++)
-	{
-		dwb::Transform transform{ {dwb::RandomRangeInt(0, 800), dwb::RandomRangeInt(0, 600)}, dwb::RandomRange(0.0f, 360.0f), 1.0f };
-		std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(transform, texture);
-
-		scene.addActor(std::move(actor));
-	}
+	Game game;
+	game.Initialize();
 
 	bool quit = false;
 	SDL_Event event;
-	float quitTime = engine.time.time + 100.0f;
 
-	while (!quit)
+	while (!quit && !game.IsQuit())
 	{
 		SDL_PollEvent(&event);
 		switch (event.type)
@@ -49,45 +18,8 @@ int main(int, char**)
 			break;
 		}
 
-		engine.Update();
-		scene.Update(engine.time.deltaTime);
-
-		if (engine.Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_ESCAPE) == dwb::InputSystem::eKeyState::Pressed)
-		{
-			quit = true;
-		}
-
-		if (engine.Get<dwb::InputSystem>()->GetButtonState((int) dwb::InputSystem::eMouseButton::Left) == dwb::InputSystem::eKeyState::Pressed)
-		{
-			channel.SetPitch(dwb::RandomRange(0.2f, 2.0f));
-			engine.Get<dwb::AudioSystem>()->PlayAudio("explosion", 1, dwb::RandomRange(0.2f, 2.0f));
-			dwb::Vector2 position = engine.Get<dwb::InputSystem>()->GetMousePosition();
-
-			//Get<dwb::Texture>("sf2.png", engine.Get<dwb::Renderer>()
-			//const Vector2& position, size_t count, float lifetime, std::shared_ptr<Texture> texture, float speed
-
-			engine.Get<dwb::ParticleSystem>()->Create(position, 20, 3, engine.Get<dwb::ResourceSystem>()->Get<dwb::Texture>("devito.png", engine.Get<dwb::Renderer>()), 200);
-			std::cout << position.x << " " << position.y << std::endl;
-		}
-
-
-		if (engine.time.time >= quitTime) quit = true;
-		engine.time.timeScale = 1;
-
-		engine.Get<dwb::Renderer>()->BeginFrame();
-
-		scene.Draw(engine.Get<dwb::Renderer>());
-		engine.Draw(engine.Get<dwb::Renderer>());
-
-		engine.Get<dwb::Renderer>()->EndFrame();
-
-		//for (int i = 0; i < 50; i++) 
-		//{
-		//	SDL_Rect src{ 32,64, 32,64 };
-
-		//	SDL_Rect dest{ dwb::RandomRangeInt(0,screen.x), dwb::RandomRangeInt(0,screen.y), 64,96 };
-		//	SDL_RenderCopy(renderer, texture, &src, &dest);
-		//}
+		game.Update();
+		game.Draw();
 	}
 
 	SDL_Quit();
