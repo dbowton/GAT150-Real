@@ -58,7 +58,7 @@ namespace dwb
 		}
 	}
 
-	void ParticleSystem::Create(const Vector2& position, size_t count, float lifetime, const std::vector<Color>& colors, float speed, float angle, float angleRange)
+	void ParticleSystem::Create(const Vector2& position, size_t count, float lifetime, std::shared_ptr<Texture> texture, float speed, float angle, float angleRange)
 	{
 		for (size_t i = 0; i < count; i++)
 		{
@@ -69,7 +69,7 @@ namespace dwb
 				particle->lifetime = lifetime;
 				particle->position = position;
 				particle->prevPosition = position;
-				//particle->color = colors[rand() % colors.size()];
+				particle->texture = texture;
 
 				particle->velocity = dwb::Vector2::Rotate(dwb::Vector2::right, angle + dwb::RandomRange(-angleRange, angleRange)) * (speed * Random());
 			}

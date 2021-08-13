@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include "Math/MathUtils.h"
 #include <iostream>
 
 namespace dwb
@@ -57,8 +58,15 @@ namespace dwb
 		Vector2 size = texture->GetSize();
 		size *= scale;
 
-		SDL_Rect dest{ (int) position.x, (int) position.y, (int) size.x, (int) size.y };
-		SDL_RenderCopyEx(renderer, texture->texture, nullptr, &dest, angle, nullptr, SDL_FLIP_NONE);
+		Vector2 newPosition = position - (size * 0.5f);
+
+		SDL_Rect dest;
+		dest.x = static_cast<int>(newPosition.x);
+		dest.y = static_cast<int>(newPosition.y);
+		dest.w = static_cast<int>(size.x);
+		dest.h = static_cast<int>(size.y);
+
+		SDL_RenderCopyEx(renderer, texture->texture, nullptr, &dest, dwb::RadToDeg(angle), nullptr, SDL_FLIP_NONE);
 	}
 
 	void Renderer::Draw(std::shared_ptr<dwb::Texture> texture, const Transform& transform)
@@ -66,7 +74,14 @@ namespace dwb
 		Vector2 size = texture->GetSize();
 		size *= transform.scale;
 
-		SDL_Rect dest{ (int)transform.position.x, (int)transform.position.y, (int)size.x, (int)size.y };
-		SDL_RenderCopyEx(renderer, texture->texture, nullptr, &dest, transform.rotation, nullptr, SDL_FLIP_NONE);
+		Vector2 newPosition = transform.position - (size * 0.5f);
+
+		SDL_Rect dest;
+		dest.x = static_cast<int>(newPosition.x);
+		dest.y = static_cast<int>(newPosition.y);
+		dest.w = static_cast<int>(size.x);
+		dest.h = static_cast<int>(size.y);
+
+		SDL_RenderCopyEx(renderer, texture->texture, nullptr, &dest, dwb::RadToDeg(transform.rotation), nullptr, SDL_FLIP_NONE);
 	}
 }
