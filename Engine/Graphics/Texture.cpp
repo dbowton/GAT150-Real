@@ -52,7 +52,7 @@ namespace dwb
 	Vector2 Texture::GetSize() const
 	{
 		SDL_Point point;
-		SDL_QueryTexture(texture, nullptr, nullptr, &point.x, &point.y);
+ 		SDL_QueryTexture(texture, nullptr, nullptr, &point.x, &point.y);
 
 		return {point.x, point.y};
 	}

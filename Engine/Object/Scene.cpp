@@ -9,23 +9,26 @@ namespace dwb
 		actors.insert(actors.end(), std::make_move_iterator(newActors.begin()), std::make_move_iterator(newActors.end()));
 		newActors.clear();
 
-		std::for_each(actors.begin(), actors.end(), [dt](auto& actor) {actor->Update(dt); });
-
-		for (size_t i = 0; i < actors.size(); i++)
+		if (actors.begin() != actors.end())
 		{
-			for (size_t j = i + 1; j < actors.size(); j++)
+			std::for_each(actors.begin(), actors.end(), [dt](auto& actor) {actor->Update(dt); });
+
+			for (size_t i = 0; i < actors.size(); i++)
 			{
-				if (actors[i]->destroy || actors[j]->destroy) continue;
-
-				dwb::Vector2 dir = actors[i]->transform.position - actors[j]->transform.position;
-				float distance = dir.Length();
-				if (distance < actors[i]->GetRadius() + actors[j]->GetRadius())
+				for (size_t j = i + 1; j < actors.size(); j++)
 				{
-					actors[i]->onCollision(actors[j].get());
-					actors[j]->onCollision(actors[i].get());
-				}
-			}
+					if (actors[i]->destroy || actors[j]->destroy) continue;
 
+					dwb::Vector2 dir = actors[i]->transform.position - actors[j]->transform.position;
+					float distance = dir.Length();
+					if (distance < actors[i]->GetRadius() + actors[j]->GetRadius())
+					{
+						actors[i]->onCollision(actors[j].get());
+						actors[j]->onCollision(actors[i].get());
+					}
+				}
+
+			}
 		}
 
 		auto iter = actors.begin();

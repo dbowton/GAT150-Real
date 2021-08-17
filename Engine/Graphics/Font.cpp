@@ -22,6 +22,7 @@ namespace dwb
 			return false;
 		}
 
+		return true;
 	}
 	
 	SDL_Surface* Font::CreateSurface(const std::string& text, const dwb::Color& color)

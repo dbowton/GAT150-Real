@@ -20,7 +20,7 @@ namespace dwb
 		{
 			if (particle.isActive) {
 				particle.lifetime -= dt;
-				particle.isActive = particle.lifetime > 0;
+				particle.isActive = particle.lifetime >= 0;
 
 				particle.prevPosition = particle.position;
 				particle.position += particle.velocity * dt;

@@ -21,7 +21,6 @@ public:
 	void Draw();
 
 private:
-	void UpdateTitle(float dt);
 	void UpdateLevelStart(float dt);
 
 	void OnAddPoints(const dwb::Event& event);
