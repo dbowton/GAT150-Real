@@ -20,6 +20,10 @@
 #include "Object/Object.h"
 #include "Framework/System.h"
 
+//Components
+#include "Component/SpriteComponent.h"
+#include "Component/PhysicsComponent.h"
+
 //Systems
 #include "Framework/EventSystem.h"
 #include "Input/InputSystem.h"
