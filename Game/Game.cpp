@@ -34,17 +34,22 @@ void Game::Initialize()
 
 
 	//actor
-	std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(dwb::Transform{ { 400, 300 } });
+	std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(dwb::Transform{ { 400, 300 }, 0, 4 });
 
+	//{
+	//	dwb::SpriteComponent* component = actor->AddComponent<dwb::SpriteComponent>();
+	//	component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
+	//}
+	//{
+	//	dwb::PhysicsComponent* component = actor->AddComponent<dwb::PhysicsComponent>();
+	//	component->ApplyForce(dwb::Vector2::right * 50);
+	//}
 	{
-		std::unique_ptr<dwb::SpriteComponent> component = std::make_unique<dwb::SpriteComponent>();
-		component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Assets/devito.png", engine->Get<dwb::Renderer>());
-		actor->AddComponent(std::move(component));
-	}
-	{
-		std::unique_ptr<dwb::PhysicsComponent> component = std::make_unique<dwb::PhysicsComponent>();
-		component->ApplyForce(dwb::Vector2::right * 50);
-		actor->AddComponent(std::move(component));
+		dwb::SpriteAnimationComponent* component = actor->AddComponent<dwb::SpriteAnimationComponent>();
+		component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
+		component->fps = 20;
+		component->numFramesX = 12;
+		component->numFramesY = 8;
 	}
 
 	scene->addActor(std::move(actor));

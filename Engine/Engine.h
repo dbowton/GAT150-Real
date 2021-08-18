@@ -22,6 +22,7 @@
 
 //Components
 #include "Component/SpriteComponent.h"
+#include "Component/SpriteAnimationComponent.h"
 #include "Component/PhysicsComponent.h"
 
 //Systems
