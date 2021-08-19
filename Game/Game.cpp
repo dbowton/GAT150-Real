@@ -36,10 +36,13 @@ void Game::Initialize()
 	//actor
 	std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(dwb::Transform{ { 400, 300 }, 0, 4 });
 
-	//{
-	//	dwb::SpriteComponent* component = actor->AddComponent<dwb::SpriteComponent>();
-	//	component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
-	//}
+	{
+		auto component = dwb::ObjectFactory::Instance().Create<dwb::SpriteComponent>("SpriteComponent");
+		component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
+		actor->AddComponent(std::move(component));
+
+		//dwb::SpriteComponent* component = actor->AddComponent<dwb::SpriteComponent>();
+	}
 	//{
 	//	dwb::PhysicsComponent* component = actor->AddComponent<dwb::PhysicsComponent>();
 	//	component->ApplyForce(dwb::Vector2::right * 50);

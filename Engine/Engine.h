@@ -1,19 +1,23 @@
 #pragma once
 
+//core
+#include "Core/Utilities.h"
+#include "Core/FileSystem.h"
+#include "Core/Timer.h"
+
+//Framework
+#include "Framework/EventSystem.h"
+#include "Framework/Singleton.h"
+#include "Framework/Factory.h"
+
 //Audio
 #include "Audio/AudioSystem.h"
-
 
 //Graphics
 #include "Graphics/Renderer.h"
 #include "Graphics/Texture.h"
 #include "Graphics/ParticleSystem.h"
 #include "Graphics/Font.h"
-
-//core
-#include "Core/Utilities.h"
-#include "Core/FileSystem.h"
-#include "Core/Timer.h"
 
 //Base
 #include "Object/Actor.h"
@@ -26,7 +30,6 @@
 #include "Component/PhysicsComponent.h"
 
 //Systems
-#include "Framework/EventSystem.h"
 #include "Input/InputSystem.h"
 
 //Resource
@@ -47,6 +50,8 @@
 
 namespace dwb
 {
+	using ObjectFactory = Singleton<Factory<std::string, Object>>;
+
 	class Engine
 	{
 	public:

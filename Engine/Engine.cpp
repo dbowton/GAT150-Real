@@ -12,6 +12,8 @@ namespace dwb
 		systems.push_back(std::make_unique<ParticleSystem>());
 
 		std::for_each(systems.begin(), systems.end(), [](auto& system) {system->StartUp(); });
+
+		ObjectFactory::Instance().Register<dwb::SpriteComponent>("SpriteComponent");
 	}
 	void Engine::ShutDown()
 	{
