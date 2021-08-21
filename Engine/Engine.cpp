@@ -13,7 +13,14 @@ namespace dwb
 
 		std::for_each(systems.begin(), systems.end(), [](auto& system) {system->StartUp(); });
 
-		ObjectFactory::Instance().Register<dwb::SpriteComponent>("SpriteComponent");
+
+		REGISTER_CLASS(Actor);
+		REGISTER_CLASS(SpriteComponent);
+		REGISTER_CLASS(SpriteAnimationComponent);
+		REGISTER_CLASS(PhysicsComponent);
+
+
+		//ObjectFactory::Instance().Register<SpriteComponent>("SpriteComponent");
 	}
 	void Engine::ShutDown()
 	{

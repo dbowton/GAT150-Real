@@ -13,7 +13,7 @@ namespace dwb
 
 	const Color Color::yellow{ 1, 1, 0 };
 
-	std::istream& operator>>(std::istream& stream, Color& c)
+	std::istream& operator >> (std::istream& stream, Color& c)
 	{
 		std::string line;
 		std::getline(stream, line);
@@ -32,6 +32,12 @@ namespace dwb
 			c.b = std::stof(b);
 		}
 
+		return stream;
+	}
+
+	std::ostream& operator << (std::ostream& stream, Color& c)
+	{
+		stream << c.r << " " << c.g << " " << c.b;
 		return stream;
 	}
 }
