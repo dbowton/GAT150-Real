@@ -30,4 +30,26 @@ namespace dwb
 	{
 		renderer->Draw(texture, rect, owner->transform);
 	}
+	bool SpriteAnimationComponent::Write(const rapidjson::Value& value) const
+	{
+		return false;
+	}
+	bool SpriteAnimationComponent::Read(const rapidjson::Value& value)
+	{
+		SpriteComponent::Read(value);
+
+		int framesPerSecond;
+		JSON_READ(value, framesPerSecond);
+		fps = framesPerSecond;
+
+		int numXFrames;
+		JSON_READ(value, numXFrames);
+		numFramesX = numXFrames;
+
+		int numYFrames;
+		JSON_READ(value, numYFrames);
+		numFramesY = numYFrames;
+
+		return true;
+	}
 }

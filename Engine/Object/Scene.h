@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "Core/Serailizable.h"
 #include <list>
 #include <memory>
 #include <vector>
@@ -10,7 +11,7 @@ namespace dwb
 	class Engine;
 	class Renderer;
 
-	class Scene : public Object
+	class Scene : public Object, public ISerializable
 	{
 	public:
 		void Update(float dt);
@@ -23,6 +24,9 @@ namespace dwb
 		template<typename T>
 		T* getActor();
 
+		virtual bool Write(const rapidjson::Value& value) const override;
+		virtual bool Read(const rapidjson::Value& value) override;
+
 		template<typename T>
 		std::vector<T*> getActors();
 
@@ -32,6 +36,8 @@ namespace dwb
 	private:
 		std::vector<std::unique_ptr<Actor>> actors;
 		std::vector<std::unique_ptr<Actor>> newActors;
+
+		// Inherited via ISerializable
 	};
 
 	template<typename T>

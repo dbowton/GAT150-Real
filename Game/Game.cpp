@@ -32,30 +32,37 @@ void Game::Initialize()
 	dwb::SeedRandom(static_cast<unsigned int>(time(nullptr)));
 	dwb::SetFilePath("../Resources");
 
+	rapidjson::Document document;
+	bool success = dwb::json::Load("scene.txt", document);
+	
+	assert(success);
+
+	scene->Read(document);
+
 
 	//actor
-	std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(dwb::Transform{ { 400, 300 }, 0, 4 });
+	//std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(dwb::Transform{ { 400, 300 }, 0, 4 });
 
-	{
-		auto component = dwb::ObjectFactory::Instance().Create<dwb::SpriteComponent>("SpriteComponent");
-		component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
-		actor->AddComponent(std::move(component));
-
-		//dwb::SpriteComponent* component = actor->AddComponent<dwb::SpriteComponent>();
-	}
 	//{
-	//	dwb::PhysicsComponent* component = actor->AddComponent<dwb::PhysicsComponent>();
-	//	component->ApplyForce(dwb::Vector2::right * 50);
-	//}
-	{
-		dwb::SpriteAnimationComponent* component = actor->AddComponent<dwb::SpriteAnimationComponent>();
-		component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
-		component->fps = 20;
-		component->numFramesX = 12;
-		component->numFramesY = 8;
-	}
+	//	auto component = dwb::ObjectFactory::Instance().Create<dwb::SpriteComponent>("SpriteComponent");
+	//	component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
+	//	actor->AddComponent(std::move(component));
 
-	scene->addActor(std::move(actor));
+	//	//dwb::SpriteComponent* component = actor->AddComponent<dwb::SpriteComponent>();
+	//}
+	////{
+	////	dwb::PhysicsComponent* component = actor->AddComponent<dwb::PhysicsComponent>();
+	////	component->ApplyForce(dwb::Vector2::right * 50);
+	////}
+	//{
+	//	dwb::SpriteAnimationComponent* component = actor->AddComponent<dwb::SpriteAnimationComponent>();
+	//	component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
+	//	component->fps = 20;
+	//	component->numFramesX = 12;
+	//	component->numFramesY = 8;
+	//}
+
+	//scene->addActor(std::move(actor));
 }
 
 void Game::Shutdown()

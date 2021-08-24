@@ -209,5 +209,13 @@
     <ClInclude Include="core\Json.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Serailizable.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Build\Resources\scene.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

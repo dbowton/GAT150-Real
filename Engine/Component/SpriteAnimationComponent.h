@@ -22,5 +22,9 @@ namespace dwb
 		float frameTime{ 0 };
 
 		SDL_Rect rect;
+
+		// Inherited via SpriteComponent
+		virtual bool Write(const rapidjson::Value& value) const override;
+		virtual bool Read(const rapidjson::Value& value) override;
 	};
 }

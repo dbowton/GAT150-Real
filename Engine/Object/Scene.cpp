@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Actor.h"
+#include "Engine.h"
 #include <algorithm>
 
 namespace dwb
@@ -66,5 +67,33 @@ namespace dwb
 	void Scene::removeAllActors()
 	{
 		actors.clear();
+	}
+
+	bool Scene::Write(const rapidjson::Value& value) const
+	{
+		return false;
+	}
+
+	bool Scene::Read(const rapidjson::Value& value)
+	{
+		if (value.HasMember("actors") && value["actors"].IsArray())
+		{
+			for (auto& actorValue : value["actors"].GetArray())
+			{
+				std::string type;
+				JSON_READ(actorValue, type);
+
+				auto actor = ObjectFactory::Instance().Create<Actor>(type);
+
+				if (actor)
+				{
+					actor->scene = this;
+					actor->Read(actorValue);
+					addActor(std::move(actor));
+				}
+			}
+		}
+
+		return true;
 	}
 }

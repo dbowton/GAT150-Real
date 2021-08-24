@@ -4,6 +4,8 @@
 #include "Math/Color.h"
 #include <string>
 
+#define JSON_READ(value, data) dwb::json::Get(value, #data, data);
+
 namespace dwb
 {
 	namespace json
