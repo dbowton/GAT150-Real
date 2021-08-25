@@ -1,6 +1,6 @@
 #pragma once
 
-#define REGISTER_CLASS(class) ObjectFactory::Instance().Register<class>(#class)
+#define REGISTER_CLASS(class) dwb::ObjectFactory::Instance().Register<class>(#class)
 
 //core
 #include "Core/Utilities.h"
@@ -22,6 +22,10 @@
 #include "Graphics/Texture.h"
 #include "Graphics/ParticleSystem.h"
 #include "Graphics/Font.h"
+
+//physics system
+#include "Physics/PhysicsSystem.h"
+#include "Component/RBPhysicsComponent.h"
 
 //Base
 #include "Object/Actor.h"

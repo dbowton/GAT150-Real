@@ -15,7 +15,6 @@ namespace dwb
 	public:
 		std::shared_ptr<Texture> texture;
 
-		// Inherited via GraphicsComponent
 		virtual bool Write(const rapidjson::Value& value) const override;
 		virtual bool Read(const rapidjson::Value& value) override;
 	};

@@ -36,8 +36,6 @@ namespace dwb
 	private:
 		std::vector<std::unique_ptr<Actor>> actors;
 		std::vector<std::unique_ptr<Actor>> newActors;
-
-		// Inherited via ISerializable
 	};
 
 	template<typename T>
@@ -50,6 +48,7 @@ namespace dwb
 
 		return nullptr;
 	}
+
 	template<typename T>
 	inline std::vector<T*> Scene::getActors()
 	{

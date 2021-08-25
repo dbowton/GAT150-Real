@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameComponent/PlayerComponent.h"
 
 dwb::Transform t;
 std::shared_ptr<dwb::Font> font;
@@ -21,6 +22,9 @@ void Game::Initialize()
 	engine = std::make_unique<dwb::Engine>();
 	engine->StartUp();
 	engine->Get<dwb::Renderer>()->Create("PewPew Destroyer", 800, 600);
+	
+	//register class
+	REGISTER_CLASS(PlayerComponent);
 
 	//make a da Scene
 	scene = std::make_unique<dwb::Scene>();

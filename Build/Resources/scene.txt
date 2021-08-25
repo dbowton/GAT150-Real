@@ -8,15 +8,63 @@
 					400,
 					300
 				],
-				"rotation":0.0
+				"rotation":0.0,
+				"scale":[
+					1,
+					1
+				]
 			},
 			"components":[
 				{
+					"type":"PlayerComponent",
+					"speed":50
+				},
+				{
 					"type":"SpriteAnimationComponent",
-					"textureName": "animated/character.png",
-					"framesPerSecond":20,
+					"textureName":"animated/character.png",
+					"framesPerSecond":24,
 					"numXFrames":12,
 					"numYFrames":8
+				},
+				{
+					"type":"RBPhysicsComponent",
+					"data.isDynamic":true,
+					"data.density":1,
+					"data.lockAngle":true,
+					"data.size":[
+						64,
+						96
+					]
+				}
+			]
+		},
+		{
+			"type":"Actor",
+			"tag":"Ground",
+			"transform":{
+				"position":[
+					400,
+					580
+				],
+				"rotation":0.0,
+				"scale":[
+					4,
+					4
+				]
+			},
+			"components":[
+				{
+					"type":"SpriteComponent",
+					"textureName":"ground.png"
+				},
+				{
+					"type":"RBPhysicsComponent",
+					"data.isDynamic":false,
+					"data.density":1,
+					"data.size":[
+						800,
+						20
+					]
 				}
 			]
 		}

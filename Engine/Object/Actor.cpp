@@ -51,8 +51,6 @@ namespace dwb
 			transform.Read(value["transform"]);
 		}
 
-		//
-
 		if (value.HasMember("components") && value["components"].IsArray())
 		{
 			for (auto& componentValue : value["components"].GetArray())
@@ -72,8 +70,6 @@ namespace dwb
 				}
 			}
 		}
-
-		//
 
 		return true;
 	}
