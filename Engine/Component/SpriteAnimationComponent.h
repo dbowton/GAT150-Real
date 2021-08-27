@@ -1,6 +1,7 @@
 #pragma once
 #include "SpriteComponent.h"
 #include "SDL.h"
+#include <map>
 
 namespace dwb
 {
@@ -8,9 +9,22 @@ namespace dwb
 
 	class SpriteAnimationComponent : public SpriteComponent
 	{
+	private:
+		struct Sequence
+		{
+			int fps{ 0 };
+			int startFrame{ 0 };
+			int endFrame{ 0 };
+		};
+
 	public:
 		void Update() override;
 		void Draw(Renderer* renderer) override;
+
+		void StartSequence(const std::string& name);
+
+		virtual bool Write(const rapidjson::Value& value) const override;
+		virtual bool Read(const rapidjson::Value& value) override;
 
 	public:
 		int frame{ 0 };
@@ -27,7 +41,7 @@ namespace dwb
 
 		SDL_Rect rect;
 
-		virtual bool Write(const rapidjson::Value& value) const override;
-		virtual bool Read(const rapidjson::Value& value) override;
+		std::map<std::string, Sequence> sequences;
+		std::string sequenceName;
 	};
 }

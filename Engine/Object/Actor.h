@@ -22,11 +22,10 @@ namespace dwb
 		virtual void Update(float dt);
 		virtual void Draw(Renderer* renderer);
 
-		virtual void onCollision(Actor* actor) {}
+		void BeginContact(Actor* other);
+		void EndContact(Actor* other);
 
 		void AddChild(std::unique_ptr<Actor> actor);
-
-		float GetRadius();
 
 		void AddComponent(std::unique_ptr<Component> component);
 		

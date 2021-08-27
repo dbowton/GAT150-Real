@@ -6,5 +6,7 @@ namespace dwb
 	{
 	public:
 		virtual ~Object() {}
+
+		virtual void Create() {}
 	};
 }

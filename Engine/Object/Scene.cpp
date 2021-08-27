@@ -13,23 +13,6 @@ namespace dwb
 		if (actors.begin() != actors.end())
 		{
 			std::for_each(actors.begin(), actors.end(), [dt](auto& actor) {actor->Update(dt); });
-
-			for (size_t i = 0; i < actors.size(); i++)
-			{
-				for (size_t j = i + 1; j < actors.size(); j++)
-				{
-					if (actors[i]->destroy || actors[j]->destroy) continue;
-
-					dwb::Vector2 dir = actors[i]->transform.position - actors[j]->transform.position;
-					float distance = dir.Length();
-					if (distance < actors[i]->GetRadius() + actors[j]->GetRadius())
-					{
-						actors[i]->onCollision(actors[j].get());
-						actors[j]->onCollision(actors[i].get());
-					}
-				}
-
-			}
 		}
 
 		auto iter = actors.begin();
