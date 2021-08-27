@@ -16,12 +16,14 @@
 
 //Audio
 #include "Audio/AudioSystem.h"
+#include "Component/AudioComponet.h"
 
 //Graphics
 #include "Graphics/Renderer.h"
 #include "Graphics/Texture.h"
 #include "Graphics/ParticleSystem.h"
 #include "Graphics/Font.h"
+#include "Component/TextComponent.h"
 
 //physics system
 #include "Physics/PhysicsSystem.h"

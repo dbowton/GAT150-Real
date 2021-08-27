@@ -13,7 +13,7 @@ namespace dwb
 			frameTimer = 0;
 			frame++;
 
-			if (frame >= numFramesX * numFramesY) frame = 0;
+			if (frame >= endFrame) frame = startFrame;
 		}
 
 		Vector2 size = texture->GetSize();
@@ -38,17 +38,15 @@ namespace dwb
 	{
 		SpriteComponent::Read(value);
 
-		int framesPerSecond;
-		JSON_READ(value, framesPerSecond);
-		fps = framesPerSecond;
+		JSON_READ(value, fps);
+		JSON_READ(value, numFramesX);
+		JSON_READ(value, numFramesY);
+		JSON_READ(value, startFrame);
+		JSON_READ(value, endFrame);
 
-		int numXFrames;
-		JSON_READ(value, numXFrames);
-		numFramesX = numXFrames;
+		if (startFrame == 0 && endFrame == 0) endFrame = numFramesX * numFramesY;
 
-		int numYFrames;
-		JSON_READ(value, numYFrames);
-		numFramesY = numYFrames;
+		frame = startFrame;
 
 		return true;
 	}

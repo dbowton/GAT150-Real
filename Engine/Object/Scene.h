@@ -21,6 +21,8 @@ namespace dwb
 		void removeActor(Actor* actor);
 		void removeAllActors();
 
+		Actor* findActor(const std::string& name);
+
 		template<typename T>
 		T* getActor();
 

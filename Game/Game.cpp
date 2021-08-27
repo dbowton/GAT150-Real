@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameComponent/PlayerComponent.h"
+#include "GameComponent/EnemyComponent.h"
 
 dwb::Transform t;
 std::shared_ptr<dwb::Font> font;
@@ -25,6 +26,7 @@ void Game::Initialize()
 	
 	//register class
 	REGISTER_CLASS(PlayerComponent);
+	REGISTER_CLASS(EnemyComponent);
 
 	//make a da Scene
 	scene = std::make_unique<dwb::Scene>();

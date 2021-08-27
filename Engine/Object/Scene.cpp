@@ -69,6 +69,14 @@ namespace dwb
 		actors.clear();
 	}
 
+	Actor* Scene::findActor(const std::string& name)
+	{
+		for (auto& actor : actors)
+		{
+			if (actor->name == name) return actor.get();
+		}
+	}
+
 	bool Scene::Write(const rapidjson::Value& value) const
 	{
 		return false;

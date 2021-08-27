@@ -41,6 +41,7 @@ namespace dwb
 
 	public:
 		bool destroy{ false };
+		std::string name;
 		std::string tag;
 
 		Transform transform;
