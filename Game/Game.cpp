@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "GameComponent/PlayerComponent.h"
 #include "GameComponent/EnemyComponent.h"
+#include "GameComponent/PickupComponent.h"
 
 dwb::Transform t;
 std::shared_ptr<dwb::Font> font;
@@ -9,7 +10,6 @@ std::shared_ptr<dwb::Texture> writtenTexture;
 std::shared_ptr<dwb::Texture> scoreText;
 std::shared_ptr<dwb::Texture> healthText;
 std::shared_ptr<dwb::Texture> livesText;
-
 
 dwb::Transform scorePos;
 dwb::Transform healthPos;
@@ -24,9 +24,10 @@ void Game::Initialize()
 	engine->StartUp();
 	engine->Get<dwb::Renderer>()->Create("PewPew Destroyer", 800, 600);
 	
-	//register class
+	//register da classes
 	REGISTER_CLASS(PlayerComponent);
 	REGISTER_CLASS(EnemyComponent);
+	REGISTER_CLASS(PickupComponent);
 
 	//make a da Scene
 	scene = std::make_unique<dwb::Scene>();
@@ -45,30 +46,12 @@ void Game::Initialize()
 
 	scene->Read(document);
 
-
-	//actor
-	//std::unique_ptr<dwb::Actor> actor = std::make_unique<dwb::Actor>(dwb::Transform{ { 400, 300 }, 0, 4 });
-
-	//{
-	//	auto component = dwb::ObjectFactory::Instance().Create<dwb::SpriteComponent>("SpriteComponent");
-	//	component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
-	//	actor->AddComponent(std::move(component));
-
-	//	//dwb::SpriteComponent* component = actor->AddComponent<dwb::SpriteComponent>();
-	//}
-	////{
-	////	dwb::PhysicsComponent* component = actor->AddComponent<dwb::PhysicsComponent>();
-	////	component->ApplyForce(dwb::Vector2::right * 50);
-	////}
-	//{
-	//	dwb::SpriteAnimationComponent* component = actor->AddComponent<dwb::SpriteAnimationComponent>();
-	//	component->texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Animated/Character.png", engine->Get<dwb::Renderer>());
-	//	component->fps = 20;
-	//	component->numFramesX = 12;
-	//	component->numFramesY = 8;
-	//}
-
-	//scene->addActor(std::move(actor));
+	for (int i = 0; i < 10; i++)
+	{
+		auto actor = dwb::ObjectFactory::Instance().Create<dwb::Actor>("coin");
+		actor->transform.position = { dwb::RandomRangeInt(0, 800), dwb::RandomRangeInt(500, 550) };
+		scene->addActor(std::move(actor));
+	}
 }
 
 void Game::Shutdown()

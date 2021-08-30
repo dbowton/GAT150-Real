@@ -2,6 +2,46 @@
 	"actors":[
 		{
 			"type":"Actor",
+			"prototype":true,
+			"name":"coin",
+			"tag":"Pickup",
+			"transform":{
+				"position":[
+					60,
+					560
+				]
+			},
+			"components":[
+				{
+					"type":"PickupComponent"
+				},
+				{
+					"type":"SpriteAnimationComponent",
+					"textureName":"animated/coins.png",
+					"fps":12,
+					"numFramesX":8,
+					"numFramesY":1,
+					"startFrame":0,
+					"endFrame":7
+				},
+				{
+					"type":"AudioComponent",
+					"soundName":"Audio/coin.wav",
+					"playOnAwake":false
+				},
+				{
+					"type":"RBPhysicsComponent",
+					"data.isDynamic":false,
+					"data.isSensor":true,
+					"data.size":[
+						32,
+						32
+					]
+				}
+			]
+		},
+		{
+			"type":"Actor",
 			"name":"Score",
 			"transform":{
 				"position":[
