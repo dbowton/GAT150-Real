@@ -49,7 +49,10 @@ namespace dwb
 	
 	void Scene::removeAllActors()
 	{
-		actors.clear();
+		for (auto& actor : actors)
+		{
+			actor->destroy = true;
+		}
 	}
 
 	Actor* Scene::findActor(const std::string& name)

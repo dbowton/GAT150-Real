@@ -31,8 +31,12 @@
 				},
 				{
 					"type":"RBPhysicsComponent",
-					"data.isDynamic":false,
-					"data.isSensor":true,
+					"data.isDynamic":true,
+					"data.restitution":1,
+					"data.gravityScale":1,
+					"data.density":1,
+					"data.lockAngle":true,
+					"data.isSensor":false,
 					"data.size":[
 						32,
 						32
@@ -42,31 +46,9 @@
 		},
 		{
 			"type":"Actor",
-			"name":"Score",
-			"transform":{
-				"position":[
-					60,
-					20
-				]
-			},
-			"components":[
-				{
-					"type":"TextComponent",
-					"fontName":"fonts/raleway.ttf",
-					"fontSize":16,
-					"color":[
-						1,
-						1,
-						1
-					],
-					"text":"Hello World!"
-				}
-			]
-		},
-		{
-			"type":"Actor",
 			"name":"Player",
 			"tag":"Player",
+			"prototype":true,
 			"transform":{
 				"position":[
 					400,
@@ -86,37 +68,44 @@
 				},
 				{
 					"type":"PlayerComponent",
-					"speed":50
+					"speed":40,
+					"jump":800
 				},
 				{
 					"type":"SpriteAnimationComponent",
-					"textureName":"animated/charactersSheet.png",
+					"textureName":"animated/knightComplete.png",
 					"fps":10,
-					"numFramesX":18,
-					"numFramesY":11,
-					"startFrame":90,
-					"endFrame":95,
+					"numFramesX":15,
+					"numFramesY":6,
+					"startFrame":0,
+					"endFrame":90,
 					"sequences":[
 						{
-							"name":"idle",
-							"sequence.fps":5,
+							"name":"Idle_Right",
+							"sequence.fps":6,
 							"sequence.startFrame":0,
-							"sequence.endFrame":1
+							"sequence.endFrame":14
 						},
 						{
-							"name":"walk_right",
-							"sequence.fps":15,
-							"sequence.startFrame":90,
-							"sequence.endFrame":95
+							"name":"Idle_Left",
+							"sequence.fps":6,
+							"sequence.startFrame":15,
+							"sequence.endFrame":29
 						},
 						{
-							"name":"walk_left",
-							"sequence.fps":15,
-							"sequence.startFrame":162,
-							"sequence.endFrame":167
+							"name":"Walk_Right",
+							"sequence.fps":6,
+							"sequence.startFrame":60,
+							"sequence.endFrame":67
+						},
+						{
+							"name":"Walk_Left",
+							"sequence.fps":6,
+							"sequence.startFrame":75,
+							"sequence.endFrame":82
 						}
 					],
-					"defaultSequence":"idle"
+					"defaultSequence":"Idle_Right"
 				},
 				{
 					"type":"RBPhysicsComponent",
@@ -127,13 +116,14 @@
 					"data.gravityScale":1,
 					"data.size":[
 						48,
-						64
+						60
 					]
 				}
 			]
 		},
 		{
 			"type":"Actor",
+			"name":"Bat",
 			"tag":"Enemy",
 			"transform":{
 				"position":[
@@ -149,7 +139,8 @@
 			"components":[
 				{
 					"type":"EnemyComponent",
-					"speed":10
+					"speed":10,
+					"canFly":true
 				},
 				{
 					"type":"SpriteAnimationComponent",
@@ -175,30 +166,116 @@
 		},
 		{
 			"type":"Actor",
-			"tag":"ground",
+			"name":"Blob",
+			"tag":"Enemy",
 			"transform":{
 				"position":[
-					400,
-					580
+					100,
+					500
 				],
 				"rotation":0.0,
 				"scale":[
-					1,
-					1
+					2,
+					2
+				]
+			},
+			"components":[
+				{
+					"type":"EnemyComponent",
+					"speed":5,
+					"canFly":false
+				},
+				{
+					"type":"SpriteAnimationComponent",
+					"textureName":"animated/slime.png",
+					"fps":10,
+					"numFramesX":8,
+					"numFramesY":2,
+					"startFrame":0,
+					"endFrame":15,
+					"sequences":[
+						{
+							"name":"Walk_Right",
+							"sequence.fps":8,
+							"sequence.startFrame":8,
+							"sequence.endFrame":15
+						},
+						{
+							"name":"Walk_Left",
+							"sequence.fps":8,
+							"sequence.startFrame":0,
+							"sequence.endFrame":7
+						}
+					],
+					"defaultSequence":"Walk_Left"
+				},
+				{
+					"type":"RBPhysicsComponent",
+					"data.isDynamic":true,
+					"data.isSensor":true,
+					"data.density":1,
+					"data.lockAngle":true,
+					"data.restitution":0.1,
+					"data.gravityScale":0,
+					"data.size":[
+						32,
+						32
+					]
+				}
+			]
+		},	
+		{
+			"type":"Actor",
+			"name":"tile02",
+			"tag":"ground",
+			"prototype":true,
+			"transform":{
+				"scale":[
+					2,
+					2
 				]
 			},
 			"components":[
 				{
 					"type":"SpriteComponent",
-					"textureName":"Assets/basicGround.png"
+					"textureName":"tileMaps/tileset1_32x32.png",
+					"rect":[
+						0,
+						224,
+						32,
+						32
+					]
 				},
 				{
 					"type":"RBPhysicsComponent",
 					"data.isDynamic":false,
 					"data.density":1,
 					"data.size":[
-						800,
-						20
+						64,
+						64
+					]
+				}
+			]
+		},
+		{
+			"type":"Actor",
+			"name":"tile01",
+			"tag":"ground",
+			"prototype":true,
+			"transform":{
+				"scale":[
+					2,
+					2
+				]
+			},
+			"components":[
+				{
+					"type":"RBPhysicsComponent",
+					"data.isDynamic":false,
+					"data.density":1,
+					"data.size":[
+						64,
+						64
 					]
 				}
 			]

@@ -16,6 +16,7 @@ namespace dwb
 
 	public:
 		std::shared_ptr<Texture> texture;
+		SDL_Rect rect;
 
 		virtual bool Write(const rapidjson::Value& value) const override;
 		virtual bool Read(const rapidjson::Value& value) override;

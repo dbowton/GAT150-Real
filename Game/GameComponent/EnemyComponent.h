@@ -15,4 +15,5 @@ public:
 
 public:
 	float speed{ 0 };
+	bool canFly{ false };
 };

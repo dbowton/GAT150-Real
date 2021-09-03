@@ -14,7 +14,7 @@ void PlayerComponent::Create()
 	owner->scene->engine->Get<EventSystem>()->Subscribe("collision_enter", std::bind(&PlayerComponent::onCollisionEnter, this, std::placeholders::_1), owner);
 	owner->scene->engine->Get<EventSystem>()->Subscribe("collision_exit", std::bind(&PlayerComponent::onCollisionExit, this, std::placeholders::_1), owner);
 
-	owner->scene->engine->Get<AudioSystem>()->AddAudio("hurt", "audio/hurt.wav");
+	owner->scene->engine->Get<AudioSystem>()->AddAudio("hurt", "audio/grunt.wav");
 }
 
 void PlayerComponent::Update()
@@ -23,16 +23,18 @@ void PlayerComponent::Update()
 	if (owner->scene->engine->Get<InputSystem>()->GetKeyState(SDL_SCANCODE_A) == InputSystem::eKeyState::Held)
 	{
 		force.x -= speed;
+		owner->isLeft = true;
 	}
 
 	if (owner->scene->engine->Get<InputSystem>()->GetKeyState(SDL_SCANCODE_D) == InputSystem::eKeyState::Held)
 	{
 		force.x += speed;
+		owner->isLeft = false;
 	}
 
-	if (contacts.size() > 0 && owner->scene->engine->Get<InputSystem>()->GetKeyState(SDL_SCANCODE_SPACE) == InputSystem::eKeyState::Pressed)
+	if (contacts.size() > 0 && owner->scene->engine->Get<InputSystem>()->GetKeyState(SDL_SCANCODE_W) == InputSystem::eKeyState::Pressed)
 	{
-		force.y -= 500;
+		force.y -= jump;
 	}
 
 	PhysicsComponent* physicsComponent = owner->GetComponent<PhysicsComponent>();
@@ -43,9 +45,16 @@ void PlayerComponent::Update()
 	SpriteAnimationComponent* spriteAnimationComponent = owner->GetComponent<SpriteAnimationComponent>();
 	assert(spriteAnimationComponent);
 
-	if (force.x > 0) spriteAnimationComponent->StartSequence("walk_right");
-	else if (force.x < 0) spriteAnimationComponent->StartSequence("walk_left");
-	else spriteAnimationComponent->StartSequence("idle");
+	if (force.x != 0)
+	{
+		if (owner->isLeft) spriteAnimationComponent->StartSequence("Walk_Left");
+		else spriteAnimationComponent->StartSequence("Walk_Right");
+	}
+	else
+	{
+		if (owner->isLeft) spriteAnimationComponent->StartSequence("Idle_Left");
+		else spriteAnimationComponent->StartSequence("Idle_Right");
+	}		
 }
 
 void PlayerComponent::onCollisionEnter(const Event& event)
@@ -59,6 +68,13 @@ void PlayerComponent::onCollisionEnter(const Event& event)
 
 	if (string_compare_i(actor->tag, "enemy"))
 	{
+		Event event;
+		event.name = "add_score";
+		event.data = -5;
+
+		owner->scene->engine->Get<dwb::EventSystem>()->Notify(event);
+
+
 		owner->scene->engine->Get<AudioSystem>()->PlayAudio("hurt");
 	}
 }
@@ -81,6 +97,7 @@ bool PlayerComponent::Write(const rapidjson::Value& value) const
 bool PlayerComponent::Read(const rapidjson::Value& value)
 {
 	JSON_READ(value, speed);
+	JSON_READ(value, jump);
 
 	return true;
 }

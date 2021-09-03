@@ -29,9 +29,10 @@
 #include "Physics/PhysicsSystem.h"
 #include "Component/RBPhysicsComponent.h"
 
-//Base
+//Objects
 #include "Object/Actor.h"
 #include "Object/Object.h"
+#include "Object/TileMap.h"
 #include "Framework/System.h"
 
 //Components

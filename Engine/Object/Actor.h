@@ -43,7 +43,9 @@ namespace dwb
 		T* GetComponent();
 
 	public:
+		bool active{ true };
 		bool destroy{ false };
+		bool isLeft{ false };
 		std::string name;
 		std::string tag;
 

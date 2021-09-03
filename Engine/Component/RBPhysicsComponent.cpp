@@ -3,6 +3,11 @@
 
 namespace dwb
 {
+	RBPhysicsComponent::RBPhysicsComponent(const RBPhysicsComponent& other)
+	{
+		data = other.data;
+	}
+	
 	dwb::RBPhysicsComponent::~RBPhysicsComponent()
 	{
 		if (body)
