@@ -6,11 +6,13 @@ class Game
 public:
 	enum class eState
 	{
+		Reset,
 		Title,
 		StartGame,
 		StartLevel,
-		Game,
-		GameOver,
+		Level,
+		PlayerDead,
+		GameOver
 	};
 
 public:
@@ -19,30 +21,30 @@ public:
 
 	void Update();
 	void Draw();
+	
+	bool IsQuit() { return quit; }
 
 private:
-	void UpdateLevelStart(float dt);
+	void Reset();
+	void Title();
+	void StartGame();
+	void StartLevel();
+	void Level();
+	void PlayerDead();
+	void GameOver();
 
-	void OnAddPoints(const dwb::Event& event);
-	void OnPlayerDead(const dwb::Event& event);
+	void OnAddScore(const dwb::Event& event);
 
 public:
 	std::unique_ptr<dwb::Engine> engine;
 	std::unique_ptr<dwb::Scene> scene;
-	bool IsQuit() { return quit; }
 
 private:
 	bool quit = false;
-	eState state = eState::Title;
-	float stateTimer = 0.0f;
 
-	int currentLevel = 0;
-	int maxLevel = 3;
-
-	size_t score = 0;
-	size_t lives = 0;
-
-	dwb::AudioChannel musicChannel;
-	std::shared_ptr<dwb::Texture> particleTexture;
-	std::shared_ptr<dwb::Texture> textTexture;
+	eState state = eState::Reset;
+	int score{ 100 };
+	float points{0};
+	float stateTimer = 0;
+	float spawnTimer = 0;
 };

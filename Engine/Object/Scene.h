@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "Core/Serailizable.h"
 #include <list>
 #include <memory>
 #include <vector>
@@ -10,7 +11,7 @@ namespace dwb
 	class Engine;
 	class Renderer;
 
-	class Scene : public Object
+	class Scene : public Object, public ISerializable
 	{
 	public:
 		void Update(float dt);
@@ -20,8 +21,13 @@ namespace dwb
 		void removeActor(Actor* actor);
 		void removeAllActors();
 
+		Actor* findActor(const std::string& name);
+
 		template<typename T>
 		T* getActor();
+
+		virtual bool Write(const rapidjson::Value& value) const override;
+		virtual bool Read(const rapidjson::Value& value) override;
 
 		template<typename T>
 		std::vector<T*> getActors();
@@ -44,6 +50,7 @@ namespace dwb
 
 		return nullptr;
 	}
+
 	template<typename T>
 	inline std::vector<T*> Scene::getActors()
 	{

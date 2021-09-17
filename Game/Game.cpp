@@ -1,6 +1,7 @@
 #include "Game.h"
-#include "Actors/Player.h"
-#include "Actors/Enemy.h"
+#include "GameComponent/PlayerComponent.h"
+#include "GameComponent/EnemyComponent.h"
+#include "GameComponent/PickupComponent.h"
 
 dwb::Transform t;
 std::shared_ptr<dwb::Font> font;
@@ -9,7 +10,6 @@ std::shared_ptr<dwb::Texture> writtenTexture;
 std::shared_ptr<dwb::Texture> scoreText;
 std::shared_ptr<dwb::Texture> healthText;
 std::shared_ptr<dwb::Texture> livesText;
-
 
 dwb::Transform scorePos;
 dwb::Transform healthPos;
@@ -23,36 +23,22 @@ void Game::Initialize()
 	engine = std::make_unique<dwb::Engine>();
 	engine->StartUp();
 	engine->Get<dwb::Renderer>()->Create("PewPew Destroyer", 800, 600);
+	
+	//register da classes
+	REGISTER_CLASS(PlayerComponent);
+	REGISTER_CLASS(EnemyComponent);
+	REGISTER_CLASS(PickupComponent);
 
 	//make a da Scene
 	scene = std::make_unique<dwb::Scene>();
 	scene->engine = engine.get();
 
-	//make a da Font
-	font = engine->Get<dwb::ResourceSystem>()->Get<dwb::Font>("fonts/roboto.ttf", &fontSize);
-
 	dwb::SeedRandom(static_cast<unsigned int>(time(nullptr)));
 	dwb::SetFilePath("../Resources");
 
-	//---------------------------------------------------------
 
-	dwb::Timer timer;
-	std::cout << timer.ElapsedTicks() << std::endl;
-
-	engine->Get<dwb::AudioSystem>()->AddAudio("explosion", "Audio/Enemy_Killed.wav");
-
-
-	engine->Get<dwb::AudioSystem>()->AddAudio("song", "Audio/song.mp3");
-	musicChannel = engine->Get<dwb::AudioSystem>()->PlayAudio("song", 1, 1, true);
-
-	//---------------------------------------------------------
-
-	//game
-	engine->Get<dwb::AudioSystem>()->AddAudio("Enemy_Killed", "Enemy_Killed.wav");
-	engine->Get<dwb::AudioSystem>()->AddAudio("Player_Fire", "Player_Fire.wav");
-
-	engine->Get<dwb::EventSystem>()->Subscribe("AddPoints", std::bind(&Game::OnAddPoints, this, std::placeholders::_1));
-	engine->Get<dwb::EventSystem>()->Subscribe("PlayerDead", std::bind(&Game::OnPlayerDead, this, std::placeholders::_1));
+	//events
+	engine->Get<dwb::EventSystem>()->Subscribe("add_score", std::bind(&Game::OnAddScore, this, std::placeholders::_1));
 }
 
 void Game::Shutdown()
@@ -63,166 +49,49 @@ void Game::Shutdown()
 
 void Game::Update()
 {
-	float dt = engine->time.deltaTime;
-	std::shared_ptr<dwb::Texture> texture;
-
-	stateTimer += dt;
-
-	switch (state)
-	{
-	case Game::eState::Title:
-		if (engine->Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_SPACE) == dwb::InputSystem::eKeyState::Pressed)
-		{
-			state = eState::StartGame;
-		}
-		break;
-	case Game::eState::StartGame:
-		score = 0;
-		lives = 3;
-
-		//Player	
-		texture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Assets/lightShip.png", engine->Get<dwb::Renderer>());
-		scene->addActor(std::make_unique<Player>(dwb::Transform{ dwb::Vector2{400.0f, 300.0f}, 0.0f, 1.0f }, texture, 250.0f));
-
-		state = eState::StartLevel;
-		break;
-	case Game::eState::StartLevel:
-	{
-		currentLevel++;
-		UpdateLevelStart(dt);
-		state = eState::Game;
-		break;
-	}
-		break;
-	case Game::eState::Game:
-		
-		if (scene->getActors<Enemy>().size() == 0 && currentLevel >= maxLevel)
-		{
-			state = eState::GameOver;
-		}
-		else if(scene->getActors<Enemy>().size() == 0)
-		{
-			state = eState::StartLevel;
-		}
-		break;
-	case Game::eState::GameOver:
-		musicChannel.Stop();
-		break;
-	default:
-		break;
-	}
-
 	engine->Update();
-	scene->Update(dt);
 
-	//---------------------------------------------------------
 	if (engine->Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_ESCAPE) == dwb::InputSystem::eKeyState::Pressed)
 	{
 		quit = true;
 	}
 
-	if (engine->Get<dwb::InputSystem>()->GetButtonState((int)dwb::InputSystem::eMouseButton::Left) == dwb::InputSystem::eKeyState::Pressed)
-	{
-		musicChannel.SetPitch(dwb::RandomRange(0.2f, 2.0f));
-		engine->Get<dwb::AudioSystem>()->PlayAudio("explosion", 1, dwb::RandomRange(0.2f, 2.0f));
-		dwb::Vector2 position = engine->Get<dwb::InputSystem>()->GetMousePosition();
 
-		engine->Get<dwb::ParticleSystem>()->Create(position, 20, 3, engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Assets/devito.png", engine->Get<dwb::Renderer>()), 200);
-		std::cout << position.x << " " << position.y << std::endl;
-	}
-}
-
-void Game::Draw()
-{
 	switch (state)
 	{
+	case Game::eState::Reset:
+		Reset();
+		break;
 	case Game::eState::Title:
-		fontSize = 128;
-
-		font->Load("fonts/curly.ttf", &fontSize);
-
-		t.position = { 400, 300 };
-
-		writtenTexture = std::make_shared<dwb::Texture>(engine->Get<dwb::Renderer>());;
-		writtenTexture->Create(font->CreateSurface("PewPew Destroyer", dwb::Color::red));
-		engine->Get<dwb::ResourceSystem>()->Add("writtenTexture", writtenTexture);
+		Title();
 		break;
 	case Game::eState::StartGame:
+		StartGame();
 		break;
 	case Game::eState::StartLevel:
+		StartLevel();
 		break;
-	case Game::eState::Game:
-		fontSize = 14;
-
-		font->Load("fonts/raleway.ttf", &fontSize);
-
-		scorePos.position = { 60, 30 };
-		healthPos.position = { 60, 50 };
-		livesPos.position = { 60, 70 };
-
-		scoreText = std::make_shared<dwb::Texture>(engine->Get<dwb::Renderer>());
-		healthText = std::make_shared<dwb::Texture>(engine->Get<dwb::Renderer>());
-		livesText = std::make_shared<dwb::Texture>(engine->Get<dwb::Renderer>());
-
-		scoreText->Create(font->CreateSurface(("Score: " + std::to_string(score)).c_str(), dwb::Color::white));
-		healthText->Create(font->CreateSurface(("Health: " + std::to_string(scene->getActor<Player>()->getHealth())).c_str(), dwb::Color::white));
-		livesText->Create(font->CreateSurface(("Lives: " + std::to_string(lives)).c_str(), dwb::Color::white));
-
-		engine->Get<dwb::ResourceSystem>()->Add("scoreText", scoreText);
-		engine->Get<dwb::ResourceSystem>()->Add("healthText", healthText);
-		engine->Get<dwb::ResourceSystem>()->Add("livesText", livesText);
+	case Game::eState::Level:
+		Level();
+		break;
+	case Game::eState::PlayerDead:
+		PlayerDead();
 		break;
 	case Game::eState::GameOver:
-
-		
-
-		if (scene->getActors<Enemy>().size() == 0)
-		{
-			fontSize = 64;
-
-			font->Load("fonts/curly.ttf", &fontSize);
-
-			t.position = { 400, 300 };
-
-			writtenTexture = std::make_shared<dwb::Texture>(engine->Get<dwb::Renderer>());;
-			writtenTexture->Create(font->CreateSurface("Victory", dwb::Color::green));
-			engine->Get<dwb::ResourceSystem>()->Add("writtenTexture", writtenTexture);
-		}
-		else
-		{
-			fontSize = 64;
-
-			font->Load("fonts/curly.ttf", &fontSize);
-
-			t.position = { 400, 300 };
-
-			writtenTexture = std::make_shared<dwb::Texture>(engine->Get<dwb::Renderer>());;
-			writtenTexture->Create(font->CreateSurface("Defeat", dwb::Color::red));
-			engine->Get<dwb::ResourceSystem>()->Add("writtenTexture", writtenTexture);
-
-			if(scene->getActor<Player>()) scene->getActor<Player>()->destroy = true;
-		}
+		GameOver();
 		break;
 	default:
 		break;
 	}
 
-	engine->Get<dwb::Renderer>()->BeginFrame();
+	//update score
 
-	if (state == Game::eState::Title)
-	{
-		engine->Get<dwb::Renderer>()->Draw(writtenTexture, t);
-	}
-	else if(state == Game::eState::Game)
-	{
-		engine->Get<dwb::Renderer>()->Draw(scoreText, scorePos);
-		engine->Get<dwb::Renderer>()->Draw(healthText, healthPos);
-		engine->Get<dwb::Renderer>()->Draw(livesText, livesPos);
-	}
-	else if (state == Game::eState::GameOver)
-	{
-		engine->Get<dwb::Renderer>()->Draw(writtenTexture, t);
-	}
+	scene->Update(engine->time.deltaTime);
+}
+
+void Game::Draw()
+{
+	engine->Get<dwb::Renderer>()->BeginFrame();
 	
 	scene->Draw(engine->Get<dwb::Renderer>());
 	engine->Draw(engine->Get<dwb::Renderer>());
@@ -230,49 +99,121 @@ void Game::Draw()
 	engine->Get<dwb::Renderer>()->EndFrame();
 }
 
-void Game::UpdateLevelStart(float dt)
-{		
+void Game::Reset()
+{
+	scene->removeAllActors();
 
-	std::shared_ptr<dwb::Texture> enemyTexture = engine->Get<dwb::ResourceSystem>()->Get<dwb::Texture>("Assets/darkShip.png", engine->Get<dwb::Renderer>());
+	rapidjson::Document document;
+	bool success = dwb::json::Load("title.txt", document);
+	assert(success);
 
-	//Shooty Enemies
-	for (int i = 0; i < 1 * (currentLevel + 1); i++)
+	scene->Read(document);
+
+	state = eState::Title;
+}
+
+void Game::Title()
+{
+	if (engine->Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_SPACE) == dwb::InputSystem::eKeyState::Pressed)
 	{
-		scene->addActor(std::make_unique<Enemy>(dwb::Transform{ dwb::Vector2{dwb::RandomRange(0.0f, 800.0f), dwb::RandomRange(0.0f, 300.0f)}, dwb::RandomRange(0.0f, 800.0f), 1.0f }, enemyTexture, 100.0f, true));
-	}
-		
-	//Non-Shooty Enemies
-	for (int i = 0; i < 2 * (currentLevel + 1); i++)
-	{
-		scene->addActor(std::make_unique<Enemy>(dwb::Transform{ dwb::Vector2{dwb::RandomRange(0.0f, 800.0f), dwb::RandomRange(0.0f, 300.0f)}, dwb::RandomRange(0.0f, 800.0f), 1.0f }, enemyTexture, 150.0f, false));
+		auto title = scene->findActor("Title");
+		assert(title);
+		title->active = false;
+
+		state = eState::StartGame;
 	}
 }
 
-void Game::OnAddPoints(const dwb::Event& event)
+void Game::StartGame()
 {
-	score += std::get<int>(event.data);
+	rapidjson::Document document;
+	bool success = dwb::json::Load("scene.txt", document);
+	assert(success);
+
+	scene->Read(document);
+
+	dwb::TileMap tileMap;
+	tileMap.scene = scene.get();
+	success = dwb::json::Load("map.txt", document);
+	assert(success);
+	tileMap.Read(document);
+	tileMap.Create();
+
+	stateTimer = 0;
+	score = 50;
+	points = 0;
+	state = eState::StartLevel;
 }
 
-void Game::OnPlayerDead(const dwb::Event& event)
+void Game::StartLevel()
 {
-	if (lives >= 1)
-	{
-		lives--;
-	}
-
-	std::cout << lives << std::endl;
+	stateTimer += engine->time.deltaTime;
 	
-	if (lives <= 0)
+	if (stateTimer >= 1)
 	{
-		state = eState::GameOver;
+		auto player = dwb::ObjectFactory::Instance().Create<dwb::Actor>("Player");
+		player->transform.position = { 400, 350 };
+		scene->addActor(std::move(player));
+
+		spawnTimer = 2;
+
+		state = eState::Level;
+	}
+}
+
+void Game::Level()
+{
+	spawnTimer -= engine->time.deltaTime;
+
+	if (spawnTimer <= 0)
+	{
+		spawnTimer = 2;
+
+		auto coin = dwb::ObjectFactory::Instance().Create<dwb::Actor>("coin");
+		coin->transform.position = { dwb::RandomRangeInt(100, 700), 150 };
+		scene->addActor(std::move(coin));
 	}
 
-	if (state == eState::GameOver)
+	auto scoreActor = scene->findActor("Score");
+	if (scoreActor)
 	{
-		std::cout << "Over" << std::endl;
+		scoreActor->GetComponent<dwb::TextComponent>()->SetText("Score: " + std::to_string(score));
+	}
+
+	auto pointActor = scene->findActor("Points");
+	if (pointActor)
+	{
+		pointActor->GetComponent<dwb::TextComponent>()->SetText("Points: " + std::to_string((int)points));
+	}
+
+	if (score <= 0)
+	{
+		state = eState::PlayerDead;
 	}
 	else
 	{
-		std::cout << "Danger" << std::endl;
+		points += engine->time.deltaTime;
 	}
+}
+
+void Game::PlayerDead()
+{
+	state = eState::GameOver;
+}
+
+void Game::GameOver()
+{
+	scene->findActor("Player")->GetComponent<PlayerComponent>()->speed = 0;
+	scene->findActor("Bat")->GetComponent<EnemyComponent>()->speed = 0;
+	scene->findActor("Blob")->GetComponent<EnemyComponent>()->speed = 0;
+
+	if (engine->Get<dwb::InputSystem>()->GetKeyState(SDL_SCANCODE_SPACE) == dwb::InputSystem::eKeyState::Pressed)
+	{
+		state = eState::Reset;
+	}
+}
+
+void Game::OnAddScore(const dwb::Event& event)
+{
+	score += std::get<int>(event.data);
 }

@@ -13,8 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Actors">
-      <UniqueIdentifier>{6ee3bfe6-7ac3-4ebd-8930-212a6d29f1bb}</UniqueIdentifier>
+    <Filter Include="Source Files\GameComponent">
+      <UniqueIdentifier>{8eb72dc0-63af-46ee-ad4e-fe85ba2cf841}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -24,28 +24,28 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Actors\Enemy.cpp">
-      <Filter>Source Files\Actors</Filter>
+    <ClCompile Include="GameComponent\PlayerComponent.cpp">
+      <Filter>Source Files\GameComponent</Filter>
     </ClCompile>
-    <ClCompile Include="Actors\Player.cpp">
-      <Filter>Source Files\Actors</Filter>
+    <ClCompile Include="GameComponent\EnemyComponent.cpp">
+      <Filter>Source Files\GameComponent</Filter>
     </ClCompile>
-    <ClCompile Include="Actors\Projectile.cpp">
-      <Filter>Source Files\Actors</Filter>
+    <ClCompile Include="GameComponent\PickupComponent.cpp">
+      <Filter>Source Files\GameComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actors\Enemy.h">
-      <Filter>Source Files\Actors</Filter>
+    <ClInclude Include="GameComponent\PlayerComponent.h">
+      <Filter>Source Files\GameComponent</Filter>
     </ClInclude>
-    <ClInclude Include="Actors\Player.h">
-      <Filter>Source Files\Actors</Filter>
+    <ClInclude Include="GameComponent\EnemyComponent.h">
+      <Filter>Source Files\GameComponent</Filter>
     </ClInclude>
-    <ClInclude Include="Actors\Projectile.h">
-      <Filter>Source Files\Actors</Filter>
+    <ClInclude Include="GameComponent\PickupComponent.h">
+      <Filter>Source Files\GameComponent</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
